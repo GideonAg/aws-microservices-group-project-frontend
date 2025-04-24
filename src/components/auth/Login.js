@@ -1,4 +1,3 @@
-// src/components/auth/Login.js
 import React, { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
@@ -12,13 +11,9 @@ const Login = () => {
 
   useEffect(() => {
     if (user?.isAuthenticated && user?.role) {
-      console.log(
-        "Navigating to:",
-        user.role === "admin" ? "/admin/dashboard" : "/team/dashboard"
-      );
       navigate(user.role === "admin" ? "/admin/dashboard" : "/team/dashboard");
     }
-  }, [user?.isAuthenticated, user?.role, navigate]);
+  }, [user?.isAuthenticated, user?.role]);
 
   const formik = useFormik({
     initialValues: { email: "", password: "" },
