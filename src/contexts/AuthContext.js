@@ -5,19 +5,20 @@ export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState({
-    isAuthenticated: !!localStorage.getItem("idToken"),
-    role: localStorage.getItem("role") || null,
+    isAuthenticated: false,
+    role: null,
   });
-  const [idToken, setIdToken] = useState(
-    localStorage.getItem("idToken") || null
-  );
+  const [idToken, setIdToken] = useState(null);
 
   useEffect(() => {
-    if (idToken && user.role) {
-      localStorage.setItem("idToken", idToken);
-      localStorage.setItem("role", user.role);
+    const storedToken = localStorage.getItem("idToken");
+    const storedRole = localStorage.getItem("role");
+
+    if (storedToken && storedRole) {
+      setIdToken(storedToken);
+      setUser({ isAuthenticated: true, role: storedRole });
     }
-  }, [idToken, user.role]);
+  }, []);
 
   const login = (token) => {
     let role = "user";

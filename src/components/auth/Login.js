@@ -11,14 +11,14 @@ const Login = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (user.isAuthenticated && user.role) {
-      const targetPath =
-        user.role === "admin" ? "/admin/dashboard" : "/team/dashboard";
-      if (window.location.pathname !== targetPath) {
-        navigate(targetPath);
-      }
+    if (user?.isAuthenticated && user?.role) {
+      console.log(
+        "Navigating to:",
+        user.role === "admin" ? "/admin/dashboard" : "/team/dashboard"
+      );
+      navigate(user.role === "admin" ? "/admin/dashboard" : "/team/dashboard");
     }
-  }, [user.isAuthenticated, user.role, navigate]);
+  }, [user?.isAuthenticated, user?.role, navigate]);
 
   const formik = useFormik({
     initialValues: { email: "", password: "" },
