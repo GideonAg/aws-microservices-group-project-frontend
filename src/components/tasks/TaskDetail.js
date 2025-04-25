@@ -17,6 +17,7 @@ export default function TaskDetail() {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [responsibility, setResponsibility] = useState("");
+  const [userComment, setUserComment] = useState("");
 
   const role = getRole();
   const API_URL = process.env.REACT_APP_API_URL;
@@ -33,6 +34,7 @@ export default function TaskDetail() {
       setAssignedTo(res.data.assignedUserEmail || "");
       setDeadline(format(new Date(res.data.deadline), "yyyy-MM-dd"));
       setStatus(res.data.status);
+      setUserComment(res.data.userComment || "");
     } catch {
       setError("Failed to load task");
     }
@@ -52,7 +54,6 @@ export default function TaskDetail() {
       setMessage("✅ Task successfully closed.");
       fetchTask();
     } catch (err) {
-      console.log(err);
       setError("❌ Failed to close task.");
     }
   };
@@ -77,31 +78,6 @@ export default function TaskDetail() {
     } catch (err) {
       console.error(err);
       setError("❌ Failed to update task.");
-    } finally {
-      setIsUpdating(false);
-    }
-  };
-
-  const handleReassign = async () => {
-    setIsUpdating(true);
-    try {
-      const payload = {
-        name,
-        description,
-        deadline: new Date(deadline).getTime(),
-        assignedUserEmail: assignedTo,
-        adminComment: comment,
-      };
-
-      await axios.post(`${API_URL}/tasks/${taskId}/reassign`, payload, {
-        headers: getAuthHeader(),
-      });
-
-      setMessage("✅ Task reassigned successfully.");
-      fetchTask();
-    } catch (err) {
-      console.error(err);
-      setError("❌ Failed to reassign task." + err);
     } finally {
       setIsUpdating(false);
     }
@@ -202,19 +178,6 @@ export default function TaskDetail() {
                 {isUpdating ? "Updating..." : "Update Task"}
               </button>
             </div>
-            <div className="sm:col-span-2 mt-2">
-              <button
-                onClick={handleReassign}
-                disabled={isUpdating}
-                className={`px-4 py-2 rounded text-white ${
-                  isUpdating
-                    ? "bg-yellow-300"
-                    : "bg-yellow-500 hover:bg-yellow-600"
-                }`}
-              >
-                {isUpdating ? "Reassigning..." : "Reassign Task"}
-              </button>
-            </div>{" "}
           </>
         ) : (
           <>
@@ -248,6 +211,67 @@ export default function TaskDetail() {
           </button>
         </div>
       )}
+
+      {role === "user" && task.status !== "closed" && (
+        <div className="mt-8">
+          <label className="block font-semibold mb-1">Your Comment</label>
+          <textarea
+            className="w-full p-2 border rounded mb-3"
+            placeholder="Enter a comment about the task"
+            value={comment}
+            onChange={(e) => setComment(e.target.value)}
+            rows={3}
+          />
+
+          <label className="block font-semibold mb-1">Update Status</label>
+          <select
+            value={status}
+            onChange={(e) => setStatus(e.target.value)}
+            className="w-full p-2 border rounded mb-3"
+          >
+            <option value="complete">Complete</option>
+          </select>
+
+          <button
+            onClick={async () => {
+              try {
+                await axios.put(
+                  `${API_URL}/tasks/${taskId}`,
+                  {
+                    status,
+                    userComment: comment,
+                  },
+                  {
+                    headers: getAuthHeader(),
+                  }
+                );
+                setMessage("✅ Task updated successfully.");
+                setComment("");
+                fetchTask();
+              } catch (err) {
+                setError("❌ Failed to update task.");
+              }
+            }}
+            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+          >
+            Submit Update
+          </button>
+        </div>
+      )}
+
+      {task.status === "closed" && userComment && (
+        <div className="mt-6 bg-gray-100 p-4 rounded">
+          <h2 className="font-semibold text-gray-700 mb-2">
+            💬 User's Completion Comment:
+          </h2>
+          <p className="text-gray-800 whitespace-pre-wrap">{userComment}</p>
+        </div>
+      )}
+
+      {message && (
+        <div className="mt-4 text-green-600 font-medium">{message}</div>
+      )}
+      {error && <div className="mt-4 text-red-500 font-medium">{error}</div>}
 
       {message && (
         <div className="mt-4 text-green-600 font-medium">{message}</div>
