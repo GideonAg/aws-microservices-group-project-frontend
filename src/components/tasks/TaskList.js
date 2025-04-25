@@ -4,7 +4,6 @@ import TaskItem from "./TaskItem";
 const TaskList = ({ tasks, onUpdate, isAdmin = false }) => {
   return (
     <div className="space-y-4">
-      {console.log(tasks)}
       {tasks.map((task) => (
         <TaskItem
           key={task.id}

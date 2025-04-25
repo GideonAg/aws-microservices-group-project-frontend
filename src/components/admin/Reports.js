@@ -15,7 +15,8 @@ import {
 import { format } from "date-fns";
 
 const Reports = () => {
-  const { role } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
+  const role = user?.role;
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -24,7 +25,7 @@ const Reports = () => {
     const fetchTasks = async () => {
       try {
         const allTasks = await getAllTasks();
-        setTasks(allTasks);
+        setTasks(allTasks?.data);
       } catch (err) {
         setError("Failed to fetch tasks");
       } finally {
@@ -64,7 +65,7 @@ const Reports = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {tasks.map((task) => (
+            {tasks?.map((task) => (
               <TableRow key={task.id}>
                 <TableCell>{task.name}</TableCell>
                 <TableCell>{task.status}</TableCell>

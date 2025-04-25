@@ -1,8 +1,9 @@
 // src/components/admin/TasksDashboard.js
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import TaskList from "../tasks/TaskList";
 import TaskForm from "../tasks/TaskForm";
 import { getAllTasks } from "../../services/api";
+import { AuthContext } from "../../contexts/AuthContext";
 
 const TasksDashboard = () => {
   const [tasks, setTasks] = useState([]);
@@ -15,7 +16,8 @@ const TasksDashboard = () => {
   const fetchTasks = async () => {
     try {
       const response = await getAllTasks();
-      setTasks(Array.isArray(response.data) ? response.data : []);
+      console.log(response.data);
+      setTasks(response.data ? response.data : []);
     } catch (error) {
       console.error("Failed to fetch tasks:", error);
     }

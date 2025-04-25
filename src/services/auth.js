@@ -1,69 +1,32 @@
-import {
-  resetPassword,
-  confirmResetPassword,
-  updatePassword,
-} from "aws-amplify/auth";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || "{{API_LINK}}";
+const API_URL = process.env.REACT_APP_API_URL;
 
-export const login = async (email, password) => {
-  try {
-    const response = await axios.post(`${API_BASE_URL}/auth`, {
-      email,
-      password,
-    });
-    const { idToken } = response.data;
-    const decodedToken = jwtDecode(idToken);
-    const userData = {
-      email: decodedToken.email,
-      sub: decodedToken.sub,
-      role: decodedToken["custom:role"] || "user",
-      idToken, // Already included
-    };
-    return userData;
-  } catch (error) {
-    if (error.response?.status === 401) {
-      throw new Error("Invalid email or password");
-    }
-    throw new Error(error.response?.data?.message || "Login failed");
-  }
-};
+export async function login(email, password) {
+  const response = await axios.post(`${API_URL}/auth`, { email, password });
+  const { idToken, accessToken, refreshToken } = response.data;
+  localStorage.setItem("idToken", idToken);
+  localStorage.setItem("accessToken", accessToken);
+  localStorage.setItem("refreshToken", refreshToken);
+  const decoded = jwtDecode(idToken);
+  localStorage.setItem("role", decoded["custom:role"]);
+  return decoded["custom:role"];
+}
 
-export const createUser = async (userData) => {
-  try {
-    const response = await axios.post(`${API_BASE_URL}/users`, userData);
-    return response.data;
-  } catch (error) {
-    throw new Error(error.response?.data?.message || "User creation failed");
-  }
-};
+export function logout() {
+  localStorage.clear();
+}
 
-export const forgotPassword = async (email) => {
-  try {
-    await resetPassword({ username: email });
-  } catch (error) {
-    throw new Error(error.message || "Password reset request failed");
-  }
-};
+export function getToken() {
+  return localStorage.getItem("idToken");
+}
 
-export const confirmForgotPassword = async (email, code, newPassword) => {
-  try {
-    await confirmResetPassword({
-      username: email,
-      confirmationCode: code,
-      newPassword,
-    });
-  } catch (error) {
-    throw new Error(error.message || "Password reset failed");
-  }
-};
+export function getRole() {
+  return localStorage.getItem("role");
+}
 
-export const changePassword = async (oldPassword, newPassword) => {
-  try {
-    await updatePassword({ oldPassword, newPassword });
-  } catch (error) {
-    throw new Error(error.message || "Password change failed");
-  }
-};
+export function getAuthHeader() {
+  const token = getToken();
+  return token ? { Authorization: `Bearer ${token}` } : {};
+}
