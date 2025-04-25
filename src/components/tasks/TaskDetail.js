@@ -82,6 +82,31 @@ export default function TaskDetail() {
     }
   };
 
+  const handleReassign = async () => {
+    setIsUpdating(true);
+    try {
+      const payload = {
+        name,
+        description,
+        deadline: new Date(deadline).getTime(),
+        assignedUserEmail: assignedTo,
+        adminComment: comment,
+      };
+
+      await axios.post(`${API_URL}/tasks/${taskId}/reassign`, payload, {
+        headers: getAuthHeader(),
+      });
+
+      setMessage("✅ Task reassigned successfully.");
+      fetchTask();
+    } catch (err) {
+      console.error(err);
+      setError("❌ Failed to reassign task." + err);
+    } finally {
+      setIsUpdating(false);
+    }
+  };
+
   if (!task) return <div className="p-6">Loading...</div>;
 
   return (
@@ -166,7 +191,6 @@ export default function TaskDetail() {
                 className="w-full p-2 mt-1 border rounded"
               />
             </div>
-
             <div className="sm:col-span-2 mt-2">
               <button
                 onClick={handleUpdate}
@@ -178,6 +202,19 @@ export default function TaskDetail() {
                 {isUpdating ? "Updating..." : "Update Task"}
               </button>
             </div>
+            <div className="sm:col-span-2 mt-2">
+              <button
+                onClick={handleReassign}
+                disabled={isUpdating}
+                className={`px-4 py-2 rounded text-white ${
+                  isUpdating
+                    ? "bg-yellow-300"
+                    : "bg-yellow-500 hover:bg-yellow-600"
+                }`}
+              >
+                {isUpdating ? "Reassigning..." : "Reassign Task"}
+              </button>
+            </div>{" "}
           </>
         ) : (
           <>
