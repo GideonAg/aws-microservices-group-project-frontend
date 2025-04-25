@@ -60,74 +60,106 @@ export default function TaskForm() {
         await axios.put(`${API_URL}/tasks/${taskId}`, payload, {
           headers: getAuthHeader(),
         });
-        setMessage("Task updated successfully");
+        setMessage("✅ Task updated successfully");
       } else {
         await axios.post(`${API_URL}/tasks`, payload, {
           headers: getAuthHeader(),
         });
-        setMessage("Task created successfully");
+        setMessage("✅ Task created successfully");
       }
       setTimeout(() => navigate("/admin/dashboard"), 1500);
     } catch (err) {
-      setError("Failed to submit task");
+      setError("❌ Failed to submit task");
     }
   };
 
   return (
-    <div className="p-6 max-w-2xl mx-auto">
-      <h1 className="text-2xl font-bold mb-4">
-        {taskId ? "Edit Task" : "Create Task"}
+    <div className="p-6 max-w-2xl mx-auto bg-white shadow-md rounded-lg">
+      <h1 className="text-3xl font-bold mb-6 border-b pb-2">
+        {taskId ? "✏️ Edit Task" : "📝 Create Task"}
       </h1>
-      {message && <div className="text-green-600 mb-2">{message}</div>}
-      {error && <div className="text-red-500 mb-2">{error}</div>}
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <input
-          type="text"
-          name="name"
-          placeholder="Task Name"
-          className="w-full p-2 border rounded"
-          value={formData.name}
-          onChange={handleChange}
-          required
-        />
-        <textarea
-          name="description"
-          placeholder="Description"
-          className="w-full p-2 border rounded"
-          rows={3}
-          value={formData.description}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="text"
-          name="responsibility"
-          placeholder="Responsibility"
-          className="w-full p-2 border rounded"
-          value={formData.responsibility}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="date"
-          name="deadline"
-          className="w-full p-2 border rounded"
-          value={formData.deadline}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="email"
-          name="assignedUserEmail"
-          placeholder="Assign to (User Email)"
-          className="w-full p-2 border rounded"
-          value={formData.assignedUserEmail}
-          onChange={handleChange}
-          required
-        />
+
+      {message && (
+        <div className="text-green-600 bg-green-50 border border-green-200 p-2 rounded mb-4">
+          {message}
+        </div>
+      )}
+      {error && (
+        <div className="text-red-500 bg-red-50 border border-red-200 p-2 rounded mb-4">
+          {error}
+        </div>
+      )}
+
+      <form onSubmit={handleSubmit} className="space-y-5">
+        <div>
+          <label className="block font-medium mb-1">Task Name</label>
+          <input
+            type="text"
+            name="name"
+            placeholder="Enter task name"
+            className="w-full p-2 border rounded"
+            value={formData.name}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        <div>
+          <label className="block font-medium mb-1">Description</label>
+          <textarea
+            name="description"
+            placeholder="Enter description"
+            className="w-full p-2 border rounded"
+            rows={3}
+            value={formData.description}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        <div>
+          <label className="block font-medium mb-1">Responsibility</label>
+          <input
+            type="text"
+            name="responsibility"
+            placeholder="e.g. Finance Department"
+            className="w-full p-2 border rounded"
+            value={formData.responsibility}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        <div>
+          <label className="block font-medium mb-1">Deadline</label>
+          <input
+            type="date"
+            name="deadline"
+            className="w-full p-2 border rounded"
+            value={formData.deadline}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        <div>
+          <label className="block font-medium mb-1">
+            Assign to (User Email)
+          </label>
+          <input
+            type="email"
+            name="assignedUserEmail"
+            placeholder="user@example.com"
+            className="w-full p-2 border rounded"
+            value={formData.assignedUserEmail}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
         <button
           type="submit"
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+          className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
         >
           {taskId ? "Update Task" : "Create Task"}
         </button>
