@@ -40,11 +40,11 @@ export default function TaskDetail() {
         { adminComment: comment },
         { headers: getAuthHeader() }
       );
-      setMessage("Task successfully closed");
+      setMessage("✅ Task successfully closed.");
       fetchTask();
     } catch (err) {
       console.log(err);
-      setError("Failed to close task");
+      setError("❌ Failed to close task.");
     }
   };
 
@@ -62,11 +62,11 @@ export default function TaskDetail() {
         headers: getAuthHeader(),
       });
 
-      setMessage("Task updated successfully");
+      setMessage("✅ Task updated successfully.");
       fetchTask();
     } catch (err) {
       console.error(err);
-      setError("Failed to update task");
+      setError("❌ Failed to update task.");
     } finally {
       setIsUpdating(false);
     }
@@ -75,22 +75,36 @@ export default function TaskDetail() {
   if (!task) return <div className="p-6">Loading...</div>;
 
   return (
-    <div className="p-6 max-w-3xl mx-auto">
-      <h1 className="text-2xl font-bold mb-4">Task Details</h1>
+    <div className="p-6 max-w-3xl mx-auto bg-white shadow rounded-lg">
+      <h1 className="text-3xl font-bold mb-6 border-b pb-2">📝 Task Details</h1>
 
-      <div className="space-y-3">
-        <p>
-          <strong>Name:</strong> {task.name}
-        </p>
-        <p>
-          <strong>Description:</strong> {task.description}
-        </p>
-        <p>
-          <strong>Responsibility:</strong> {task.responsibility}
-        </p>
-        <p>
-          <strong>Status:</strong> {task.status}
-        </p>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6 text-gray-800">
+        <div>
+          <label className="font-semibold">Name</label>
+          <p>{task.name}</p>
+        </div>
+        <div>
+          <label className="font-semibold">Responsibility</label>
+          <p>{task.responsibility}</p>
+        </div>
+        <div className="sm:col-span-2">
+          <label className="font-semibold">Description</label>
+          <p>{task.description}</p>
+        </div>
+        <div>
+          <label className="font-semibold">Status</label>
+          <p
+            className={`inline-block px-2 py-1 rounded text-white ${
+              task.status === "closed"
+                ? "bg-gray-500"
+                : task.status === "expired"
+                ? "bg-red-500"
+                : "bg-green-600"
+            }`}
+          >
+            {task.status}
+          </p>
+        </div>
 
         {role === "admin" ? (
           <>
@@ -100,7 +114,7 @@ export default function TaskDetail() {
                 type="email"
                 value={assignedTo}
                 onChange={(e) => setAssignedTo(e.target.value)}
-                className="w-full p-2 border rounded"
+                className="w-full p-2 mt-1 border rounded"
               />
             </div>
             <div>
@@ -109,34 +123,41 @@ export default function TaskDetail() {
                 type="date"
                 value={deadline}
                 onChange={(e) => setDeadline(e.target.value)}
-                className="w-full p-2 border rounded"
+                className="w-full p-2 mt-1 border rounded"
               />
             </div>
-            <button
-              onClick={handleUpdate}
-              disabled={isUpdating}
-              className="mt-3 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-            >
-              {isUpdating ? "Updating..." : "Update Task"}
-            </button>
+            <div className="sm:col-span-2 mt-2">
+              <button
+                onClick={handleUpdate}
+                disabled={isUpdating}
+                className={`px-4 py-2 rounded text-white ${
+                  isUpdating ? "bg-blue-300" : "bg-blue-600 hover:bg-blue-700"
+                }`}
+              >
+                {isUpdating ? "Updating..." : "Update Task"}
+              </button>
+            </div>
           </>
         ) : (
           <>
-            <p>
-              <strong>Assigned To:</strong> {assignedTo}
-            </p>
-            <p>
-              <strong>Deadline:</strong> {deadline}
-            </p>
+            <div>
+              <label className="font-semibold">Assigned To</label>
+              <p>{assignedTo}</p>
+            </div>
+            <div>
+              <label className="font-semibold">Deadline</label>
+              <p>{deadline}</p>
+            </div>
           </>
         )}
       </div>
 
       {role === "admin" && task.status !== "closed" && (
-        <div className="mt-6">
+        <div className="mt-8">
+          <label className="block font-semibold mb-1">Admin Comment</label>
           <textarea
-            className="w-full p-2 border rounded mb-2"
-            placeholder="Admin Comment"
+            className="w-full p-2 border rounded mb-3"
+            placeholder="Enter comment before closing"
             value={comment}
             onChange={(e) => setComment(e.target.value)}
             rows={3}
@@ -150,8 +171,10 @@ export default function TaskDetail() {
         </div>
       )}
 
-      {message && <div className="text-green-600 mt-4">{message}</div>}
-      {error && <div className="text-red-500 mt-4">{error}</div>}
+      {message && (
+        <div className="mt-4 text-green-600 font-medium">{message}</div>
+      )}
+      {error && <div className="mt-4 text-red-500 font-medium">{error}</div>}
     </div>
   );
 }
