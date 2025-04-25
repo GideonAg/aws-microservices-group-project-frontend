@@ -15,7 +15,7 @@ export default function MyTasks() {
         const res = await axios.get(`${API_URL}/tasks`, {
           headers: getAuthHeader(),
         });
-        setTasks(res.data);
+        setTasks(res.data.data);
       } catch {
         setError("Failed to load tasks");
       }
