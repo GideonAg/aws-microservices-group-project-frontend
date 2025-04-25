@@ -13,6 +13,7 @@ export default function TaskDetail() {
   const [deadline, setDeadline] = useState("");
   const [assignedTo, setAssignedTo] = useState("");
   const [isUpdating, setIsUpdating] = useState(false);
+  const [status, setStatus] = useState(""); // For status editing
   const role = getRole();
   const API_URL = process.env.REACT_APP_API_URL;
 
@@ -24,6 +25,7 @@ export default function TaskDetail() {
       setTask(res.data);
       setAssignedTo(res.data.assignedUserEmail || "");
       setDeadline(format(new Date(res.data.deadline), "yyyy-MM-dd"));
+      setStatus(res.data.status); // Set the initial status from the fetched task
     } catch {
       setError("Failed to load task");
     }
@@ -56,6 +58,7 @@ export default function TaskDetail() {
         description: task.description,
         email: assignedTo,
         deadline: new Date(deadline).getTime(),
+        status, // Include status in the update
       };
 
       await axios.put(`${API_URL}/tasks/${taskId}`, payload, {
@@ -125,6 +128,18 @@ export default function TaskDetail() {
                 onChange={(e) => setDeadline(e.target.value)}
                 className="w-full p-2 mt-1 border rounded"
               />
+            </div>
+            <div>
+              <label className="block font-semibold">Status</label>
+              <select
+                value={status}
+                onChange={(e) => setStatus(e.target.value)}
+                className="w-full p-2 mt-1 border rounded"
+              >
+                <option value="open">Open</option>
+                <option value="closed">Closed</option>
+                <option value="expired">Expired</option>
+              </select>
             </div>
             <div className="sm:col-span-2 mt-2">
               <button
