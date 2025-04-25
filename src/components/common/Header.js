@@ -23,19 +23,25 @@ const Header = () => {
   };
 
   return (
-    <header className="bg-blue-700 text-white p-4 flex justify-between items-center">
+    <header className="bg-gradient-to-r from-blue-700 to-blue-500 text-white p-4 flex items-center justify-between shadow-lg">
       <h1
-        className="text-xl font-bold cursor-pointer"
+        className="text-2xl font-semibold cursor-pointer hover:text-gray-200 transition-all mx-auto"
         onClick={handleDashboardClick}
       >
         Task Management System
       </h1>
-      <div className="flex space-x-4">
-        <button onClick={handleDashboardClick} className="hover:underline">
+      <div className="flex space-x-4 mx-auto">
+        <button
+          onClick={handleDashboardClick}
+          className="hover:text-gray-200 transition-all"
+        >
           Task Dashboard
         </button>
         {isAuthenticated && (
-          <button onClick={handleLogout} className="hover:underline">
+          <button
+            onClick={handleLogout}
+            className="hover:text-gray-200 transition-all"
+          >
             Logout
           </button>
         )}

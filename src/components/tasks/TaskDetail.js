@@ -13,7 +13,11 @@ export default function TaskDetail() {
   const [deadline, setDeadline] = useState("");
   const [assignedTo, setAssignedTo] = useState("");
   const [isUpdating, setIsUpdating] = useState(false);
-  const [status, setStatus] = useState(""); // For status editing
+  const [status, setStatus] = useState("");
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [responsibility, setResponsibility] = useState("");
+
   const role = getRole();
   const API_URL = process.env.REACT_APP_API_URL;
 
@@ -23,9 +27,12 @@ export default function TaskDetail() {
         headers: getAuthHeader(),
       });
       setTask(res.data);
+      setName(res.data.name);
+      setDescription(res.data.description);
+      setResponsibility(res.data.responsibility);
       setAssignedTo(res.data.assignedUserEmail || "");
       setDeadline(format(new Date(res.data.deadline), "yyyy-MM-dd"));
-      setStatus(res.data.status); // Set the initial status from the fetched task
+      setStatus(res.data.status);
     } catch {
       setError("Failed to load task");
     }
@@ -54,11 +61,11 @@ export default function TaskDetail() {
     setIsUpdating(true);
     try {
       const payload = {
-        name: task.name,
-        description: task.description,
+        name,
+        description,
+        responsibility,
         email: assignedTo,
         deadline: new Date(deadline).getTime(),
-        status, // Include status in the update
       };
 
       await axios.put(`${API_URL}/tasks/${taskId}`, payload, {
@@ -83,29 +90,59 @@ export default function TaskDetail() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6 text-gray-800">
         <div>
-          <label className="font-semibold">Name</label>
-          <p>{task.name}</p>
+          <label className="block font-semibold">Name</label>
+          {role === "admin" ? (
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="w-full p-2 mt-1 border rounded"
+            />
+          ) : (
+            <p>{task.name}</p>
+          )}
         </div>
+
         <div>
-          <label className="font-semibold">Responsibility</label>
-          <p>{task.responsibility}</p>
+          <label className="block font-semibold">Responsibility</label>
+          {role === "admin" ? (
+            <input
+              type="text"
+              value={responsibility}
+              onChange={(e) => setResponsibility(e.target.value)}
+              className="w-full p-2 mt-1 border rounded"
+            />
+          ) : (
+            <p>{task.responsibility}</p>
+          )}
         </div>
+
         <div className="sm:col-span-2">
-          <label className="font-semibold">Description</label>
-          <p>{task.description}</p>
+          <label className="block font-semibold">Description</label>
+          {role === "admin" ? (
+            <textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              className="w-full p-2 mt-1 border rounded"
+              rows={3}
+            />
+          ) : (
+            <p>{task.description}</p>
+          )}
         </div>
+
         <div>
-          <label className="font-semibold">Status</label>
+          <label className="block font-semibold">Status</label>
           <p
             className={`inline-block px-2 py-1 rounded text-white ${
-              task.status === "closed"
+              status === "closed"
                 ? "bg-gray-500"
-                : task.status === "expired"
+                : status === "expired"
                 ? "bg-red-500"
                 : "bg-green-600"
             }`}
           >
-            {task.status}
+            {status}
           </p>
         </div>
 
@@ -129,18 +166,7 @@ export default function TaskDetail() {
                 className="w-full p-2 mt-1 border rounded"
               />
             </div>
-            <div>
-              <label className="block font-semibold">Status</label>
-              <select
-                value={status}
-                onChange={(e) => setStatus(e.target.value)}
-                className="w-full p-2 mt-1 border rounded"
-              >
-                <option value="open">Open</option>
-                <option value="closed">Closed</option>
-                <option value="expired">Expired</option>
-              </select>
-            </div>
+
             <div className="sm:col-span-2 mt-2">
               <button
                 onClick={handleUpdate}
