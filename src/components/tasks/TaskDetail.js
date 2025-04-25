@@ -10,9 +10,7 @@ export default function TaskDetail() {
   const [comment, setComment] = useState("");
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
-  const API_URL =
-    process.env.REACT_APP_API_URL ||
-    "https://your-api.execute-api.region.amazonaws.com/dev";
+  const API_URL = process.env.REACT_APP_API_URL;
 
   const fetchTask = async () => {
     try {

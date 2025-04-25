@@ -9,7 +9,7 @@ const TaskItem = ({ task, onUpdate, isAdmin }) => {
 
   const handleClose = async () => {
     try {
-      await closeTask(task.id, { adminComment: "Task closed" });
+      await closeTask(task.taskId, { adminComment: "Task closed" });
       onUpdate();
     } catch (error) {
       console.error("Failed to close task:", error);
@@ -28,7 +28,7 @@ const TaskItem = ({ task, onUpdate, isAdmin }) => {
       </div>
       <div className="space-x-2">
         <button
-          onClick={() => navigate(`/tasks/${task.id}`)}
+          onClick={() => navigate(`/tasks/${task.taskId}`)}
           className="bg-blue-500 text-white p-2 rounded"
         >
           View
