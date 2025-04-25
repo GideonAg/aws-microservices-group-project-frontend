@@ -3,7 +3,6 @@ import React, { useState, useEffect, useContext } from "react";
 import TaskList from "../tasks/TaskList";
 import TaskForm from "../tasks/TaskForm";
 import { getAllTasks } from "../../services/api";
-import { AuthContext } from "../../contexts/AuthContext";
 
 const TasksDashboard = () => {
   const [tasks, setTasks] = useState([]);
