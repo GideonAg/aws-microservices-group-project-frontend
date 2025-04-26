@@ -37,8 +37,8 @@ jobs:
 
       - name: Build project
         run: npm run build
-        env:
-          REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
+        # env:
+        #   REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
