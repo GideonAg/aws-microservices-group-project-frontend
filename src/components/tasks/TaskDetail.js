@@ -272,11 +272,6 @@ export default function TaskDetail() {
         <div className="mt-4 text-green-600 font-medium">{message}</div>
       )}
       {error && <div className="mt-4 text-red-500 font-medium">{error}</div>}
-
-      {message && (
-        <div className="mt-4 text-green-600 font-medium">{message}</div>
-      )}
-      {error && <div className="mt-4 text-red-500 font-medium">{error}</div>}
     </div>
   );
 }
