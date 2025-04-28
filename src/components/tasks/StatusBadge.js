@@ -2,14 +2,14 @@ import React from "react";
 
 const StatusBadge = ({ status }) => {
   const statusStyles = {
-    open: "bg-blue-100 text-blue-800",
-    completed: "bg-green-100 text-green-800",
-    expired: "bg-red-100 text-red-800",
+    open: "bg-blue-50 text-blue-600",
+    completed: "bg-green-50 text-green-600",
+    expired: "bg-red-50 text-red-600",
   };
 
   return (
     <span
-      className={`inline-block px-2 py-1 rounded-full text-sm font-semibold ${
+      className={`inline-block px-2 py-1 rounded-full text-xs font-semibold w-fit ${
         statusStyles[status] || "bg-gray-100 text-gray-800"
       }`}
     >

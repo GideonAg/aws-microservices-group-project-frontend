@@ -92,7 +92,7 @@ export default function TaskForm() {
 
       <form onSubmit={handleSubmit} className="space-y-5">
         <div>
-          <label className="block font-medium mb-1">Task Name</label>
+          <label className="block font-bold mb-1 text-xs">Task Name</label>
           <input
             type="text"
             name="name"
@@ -105,7 +105,7 @@ export default function TaskForm() {
         </div>
 
         <div>
-          <label className="block font-medium mb-1">Description</label>
+          <label className="block font-bold mb-1 text-xs">Description</label>
           <textarea
             name="description"
             placeholder="Enter description"
@@ -118,7 +118,7 @@ export default function TaskForm() {
         </div>
 
         <div>
-          <label className="block font-medium mb-1">Responsibility</label>
+          <label className="block font-bold mb-1 text-xs">Responsibility</label>
           <input
             type="text"
             name="responsibility"
@@ -131,7 +131,7 @@ export default function TaskForm() {
         </div>
 
         <div>
-          <label className="block font-medium mb-1">Deadline</label>
+          <label className="block font-bold mb-1 text-xs">Deadline</label>
           <input
             type="date"
             name="deadline"
@@ -143,7 +143,7 @@ export default function TaskForm() {
         </div>
 
         <div>
-          <label className="block font-medium mb-1">
+          <label className="block font-bold mb-1 text-xs">
             Assign to (User Email)
           </label>
           <input
@@ -159,7 +159,7 @@ export default function TaskForm() {
 
         <button
           type="submit"
-          className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
+          className="w-full bg-[#FF5A00] text-white py-2 rounded hover:bg-[#FF5A00]/80 transition"
         >
           {taskId ? "Update Task" : "Create Task"}
         </button>

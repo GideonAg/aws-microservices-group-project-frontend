@@ -1,17 +1,19 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import TasksDashboard from "./TasksDashboard";
 
 export default function AdminDashboard() {
   const navigate = useNavigate();
 
   return (
-    <div className="p-6 max-w-6xl mx-auto">
+    <div className="w-full">
       <h1 className="text-3xl font-bold mb-6 border-b pb-2">
-        🛠️ Admin Dashboard
+        Admin Dashboard
       </h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div
+      <div className="flex flex-col w-full">
+        <TasksDashboard />
+        {/* <div
           className="p-6 bg-white border rounded-lg shadow hover:bg-gray-50 cursor-pointer transition"
           onClick={() => navigate("/admin/team")}
         >
@@ -41,7 +43,7 @@ export default function AdminDashboard() {
           <p className="text-sm text-gray-600">
             View task performance reports.
           </p>
-        </div>
+        </div> */}
       </div>
     </div>
   );
