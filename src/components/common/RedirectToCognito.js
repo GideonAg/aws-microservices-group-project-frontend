@@ -3,7 +3,7 @@ import { useEffect } from "react";
 const RedirectToCognito = () => {
   useEffect(() => {
     window.location.replace(
-      "https://amalitech-task-manager.auth.eu-central-1.amazoncognito.com/login?client_id=4n4c0j24bn21uscu5k5qtb77j2&response_type=token&scope=email+openid+profile+phone+aws.cognito.signin.user.admin&redirect_uri=http://localhost:3000/dashboard/"
+      "https://testnameblahblah.auth.eu-central-1.amazoncognito.com/login?client_id=74rihsigpicvreq7m6o2vedkpg&redirect_uri=https://main.daqvdg9hz9mfz.amplifyapp.com/dashboard&response_type=token&scope=aws.cognito.signin.user.admin+email+openid+phone+profile"
     );
   }, []);
 
