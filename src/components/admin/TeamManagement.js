@@ -92,7 +92,7 @@ export default function TeamManagement() {
 
         <button
           type="submit"
-          className="w-full bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+          className="w-full bg-[#FF5A00] text-white px-4 py-2 rounded hover:bg-[#FF5A00]/80 transition"
         >
           Create User
         </button>

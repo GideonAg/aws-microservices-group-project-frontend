@@ -4,6 +4,8 @@
   "private": true,
   "dependencies": {
     "@testing-library/dom": "^10.4.0",
+    "aws-microservices-group-project-frontend": "file:",
+    "framer-motion": "^12.9.2",
     "jwt-decode": "^4.0.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
