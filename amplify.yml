@@ -1,23 +1,25 @@
 version: 1
+backend:
+  phases:
+    build:
+      commands:
+        - amplifyPush --simple
 frontend:
   phases:
     preBuild:
       commands:
-        - nvm install 18
-        - nvm use 18  
-        - node -v
         - npm install
-        - npm ci
+        - npm ci --cache .npm --prefer-offline --loglevel verbose
     build:
       commands:
-        - npm run build
+        - npm run build -- --loglevel verbose
   artifacts:
     baseDirectory: build
     files:
       - "**/*"
   cache:
     paths:
-      - node_modules/**/*
+      - .npm/**/*
   customHeaders:
     - pattern: "**/*"
       headers:
