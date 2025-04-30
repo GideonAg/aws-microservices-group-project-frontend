@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { getAuthHeader, getRole } from "../../services/auth";
 import { format } from "date-fns";
@@ -22,6 +22,7 @@ export default function TaskDetail() {
   const [description, setDescription] = useState("");
   const [responsibility, setResponsibility] = useState("");
   const [userComment, setUserComment] = useState("");
+  const navigate  = useNavigate();
 
   const role = getRole();
   const API_URL = process.env.REACT_APP_API_URL;
@@ -79,6 +80,13 @@ export default function TaskDetail() {
       setMessage("✅ Task successfully closed.");
       setTimeout(() => setMessage(""), 5000); // Clear message after 5 seconds
       fetchTask();
+      setTimeout(() => {
+        if (role === "admin") {
+          navigate("/admin/dashboard");
+        } else {
+          navigate("/team/dashboard");
+        }
+      }, 1000);
     } catch (err) {
       setError("❌ Failed to close task.");
       setTimeout(() => setError(""), 5000); // Clear error after 5 seconds
@@ -109,6 +117,14 @@ export default function TaskDetail() {
         setMessage("✅ Task updated successfully.");
         setTimeout(() => setMessage(""), 5000); // Clear message after 5 seconds
         fetchTask();
+        // Redirect based on role after a short delay
+        setTimeout(() => {
+          if (role === "admin") {
+            navigate("/admin/dashboard");
+          } else {
+            navigate("/team/dashboard");
+          }
+        }, 1000);
       }
       else {
         setMessage(response.data.message);
@@ -338,6 +354,13 @@ export default function TaskDetail() {
                 setTimeout(() => setMessage(""), 5000);
                 setComment("");
                 fetchTask();
+                setTimeout(() => {
+                  if (role === "admin") {
+                    navigate("/admin/dashboard");
+                  } else {
+                    navigate("/team/dashboard");
+                  }
+                }, 1000);
               } catch (err) {
                 setError("❌ Failed to update task.");
                 setTimeout(() => setError(""), 5000);
