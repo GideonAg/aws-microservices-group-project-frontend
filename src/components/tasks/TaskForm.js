@@ -94,7 +94,11 @@ export default function TaskForm({ onSuccess, onClose }) {
       }
       setTimeout(() => navigate("/admin/dashboard"), 1500);
     } catch (err) {
-      setError("❌ Failed to submit task " + err);
+      if (err.response && err.response.status === 400) {
+        setError("❌ " + (err.response.data?.message || "Bad Request"));
+      } else {
+        setError("❌ Failed to submit task: " + (err.response?.data?.message || err.message));
+      }
     }
     finally{
       setIsCreating(false);
