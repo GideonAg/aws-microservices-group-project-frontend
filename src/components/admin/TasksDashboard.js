@@ -54,7 +54,7 @@ const TasksDashboard = () => {
       </div>
       {showForm && (
         <div className="bg-white p-6 rounded-lg shadow-lg mb-6">
-          <TaskForm onSuccess={fetchTasks} />
+          <TaskForm onSuccess={fetchTasks} onClose={() => setShowForm(false)} />
         </div>
       )}
       <div className="flex flex-row gap-5">

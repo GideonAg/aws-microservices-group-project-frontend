@@ -4,7 +4,7 @@ import axios from "axios";
 import { getAuthHeader } from "../../services/auth";
 import { format } from "date-fns";
 
-export default function TaskForm() {
+export default function TaskForm({ onSuccess, onClose }) {
   const [formData, setFormData] = useState({
     name: "",
     description: "",
@@ -14,6 +14,7 @@ export default function TaskForm() {
   });
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const [isCreating, setIsCreating] = useState(false);
   const { taskId } = useParams();
   const navigate = useNavigate();
   const API_URL = process.env.REACT_APP_API_URL;
@@ -44,7 +45,23 @@ export default function TaskForm() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    if(name == "deadline") {
+      const selectedDeadline = new Date(value);
+      const currentTime = new Date();
+      
+      if (selectedDeadline > currentTime) {
+        // Use format that includes both date and time for 'datetime-local' input
+        setFormData((prev) => ({ ...prev, [name]: value }));
+      } else {
+        setError("Deadline should be greater than the current date and time");
+        setTimeout(() => setError(""), 5000);
+      }
+    }
+    else {
+      
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    }
+    
   };
 
   const handleSubmit = async (e) => {
@@ -52,6 +69,7 @@ export default function TaskForm() {
     setMessage("");
     setError("");
     try {
+      setIsCreating(true);
       const payload = {
         ...formData,
         deadline: new Date(formData.deadline).getTime(),
@@ -67,9 +85,23 @@ export default function TaskForm() {
         });
         setMessage("✅ Task created successfully");
       }
+
+      if(onSuccess) {
+        onSuccess();
+      }
+      if(onClose) {
+        onClose();
+      }
       setTimeout(() => navigate("/admin/dashboard"), 1500);
     } catch (err) {
-      setError("❌ Failed to submit task");
+      if (err.response && err.response.status === 400) {
+        setError("❌ " + (err.response.data?.message || "Bad Request"));
+      } else {
+        setError("❌ Failed to submit task: " + (err.response?.data?.message || err.message));
+      }
+    }
+    finally{
+      setIsCreating(false);
     }
   };
 
@@ -133,7 +165,7 @@ export default function TaskForm() {
         <div>
           <label className="block font-bold mb-1 text-xs">Deadline</label>
           <input
-            type="date"
+            type="datetime-local"
             name="deadline"
             className="w-full p-2 border rounded"
             value={formData.deadline}
@@ -161,7 +193,31 @@ export default function TaskForm() {
           type="submit"
           className="w-full bg-[#FF5A00] text-white py-2 rounded hover:bg-[#FF5A00]/80 transition"
         >
-          {taskId ? "Update Task" : "Create Task"}
+          {isCreating ? (
+            <div className="flex flex-row gap-x-2 items-center justify-center">
+                Creating
+                <svg
+                className="animate-spin h-4 w-4 text-white"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 100 16 8 8 0 01-8-8z"
+                ></path>
+              </svg>
+            </div>
+          ) : "Create Task"}
         </button>
       </form>
     </div>

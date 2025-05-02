@@ -46,11 +46,7 @@ const Header = () => {
                     </svg>
                 </button>
             </div>
-            <nav
-                className={`${
-                    menuOpen ? "flex" : "hidden"
-                } flex-col md:flex-row gap-4 items-start md:items-center mt-4 md:mt-0 md:gap-x-6 w-full md:w-auto`}
-            >
+            <nav className={`${  menuOpen ? "flex" : "hidden" } md:flex flex-col md:flex-row gap-4 items-start md:items-center mt-4 md:mt-0 md:gap-x-6 w-full md:w-auto transition-all duration-300 ease-in-out`} >
                 {role === "admin" && (
                     <>
                         <button onClick={() => handleNavigate("/admin/dashboard")}>Dashboard</button>
