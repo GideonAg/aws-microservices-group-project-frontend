@@ -347,7 +347,7 @@ export default function TaskDetail() {
               try {
                 await axios.put(
                   `${API_URL}/tasks/${taskId}`,
-                  { status, userComment: comment },
+                  { status: "complete", userComment: comment },
                   { headers: getAuthHeader() }
                 );
                 setMessage("✅ Task updated successfully.");
